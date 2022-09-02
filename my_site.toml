@@ -46,8 +46,8 @@ page = "https://dilawars.notion.site"
   h1 = 'Montserrat'
   h2 = 'Montserrat'
   h3 = 'Montserrat'
-  body = ''
-  code = ''
+  body = 'Proxima Nova'
+  code = 'Fira Code'
 
   ## Custom Element Injection ##
   # defined as an array of tables [[site.inject]], followed by 'head' or 'body' to set 
