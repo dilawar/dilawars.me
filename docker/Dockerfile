@@ -28,5 +28,4 @@ WORKDIR /app/loconotion/
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
 ENTRYPOINT [ "python", "loconotion", "--chromedriver", "/chromedriver/chromedriver"]

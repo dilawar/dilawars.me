@@ -7,5 +7,5 @@ services:
       dockerfile: docker/Dockerfile
     image: loconotion:latest
     volumes:
-      - ./dilawars.me:/app/loconotion/dist
+      - ./:/app/loconotion
     restart: always
