@@ -284,11 +284,10 @@ class Parser:
         try:
             self.load_correct_theme(url)
         except TimeoutException as ex:
-            log.critical(
+            log.warning(
                 "Timeout waiting for page content to load, or no content found."
                 " Are you sure the page is set to public?"
             )
-            raise ex
 
         # open the toggle blocks in the page
         self.open_toggle_blocks(self.args["timeout"])
