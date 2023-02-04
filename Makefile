@@ -1,8 +1,8 @@
 all: dilawars.me
 
-dilawars.me:
+dilawars.me build:
 	rm -rf dilawars.me
-	docker-compose run loconotion my_site.toml --clean-js --verbose
+	docker-compose run loconotion my_site.toml --verbose
 
 single:
 	docker-compose run loconotion my_site.toml --verbose --single-page
@@ -13,4 +13,4 @@ upload:
 		-R ftp.dilawars.me \
 		/ ./dist/dilawars.me/*
 
-.PHONY: upload dilawars.me
+.PHONY: upload dilawars.me 
