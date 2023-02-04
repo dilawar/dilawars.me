@@ -8,9 +8,9 @@ single:
 	docker-compose run loconotion my_site.toml --verbose --single-page
 
 
-upload: dilawars.me
-	ncftpput -u dilawar@dilawars.me -p $$FTP_PASSWORD \
+upload: 
+	ncftpput -u mail@dilawars.me -p $$DILAWARS_ME_FTP_PASSWORD \
 		-R ftp.dilawars.me \
-		/public_html ./dist/dilawars.me/*
+		/ ./dist/dilawars.me/*
 
 .PHONY: upload dilawars.me
