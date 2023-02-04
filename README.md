@@ -1,3 +1,5 @@
+Modification made to orignal loconotion to build my site https://dilawars.me from https://dilawars.notion.site. 
+
 # Loconotion
 
 **Loconotion** is a Python script that parses a [Notion.so](https://notion.so) public page (alongside all of its subpages) and generates a lightweight, customizable static site.
