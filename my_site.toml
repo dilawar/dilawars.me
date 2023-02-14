@@ -50,16 +50,18 @@ page = "https://dilawars.notion.site"
   code = 'Fira Code'
 
   ## Custom Element Injection ##
-  # defined as an array of tables [[site.inject]], followed by 'head' or 'body' to set
-  # the injection point, followed by name of the tag to inject
-  # each key in the table maps to an atttribute in the tag
-  # e.g. the following injects this tag in the <head>:
-  #   <link href="favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
-  # [[site.inject.head.link]]
-  # rel="icon"
-  # sizes="16x16"
-  # type="image/png"
-  # href="/example/favicon-16x16.png"
+  [[site.inject.head.script]]
+  inner_html="""
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6C5GKY3X0W"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-6C5GKY3X0W');
+    </script>
+  """
 
   #
   # the following injects this tag in the in the <body>:
