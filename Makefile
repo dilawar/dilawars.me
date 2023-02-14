@@ -1,16 +1,18 @@
+DOCKER:=/usr/bin/docker
+
 all: dilawars.me
 
 dilawars.me build:
 	rm -rf dilawars.me
-	docker-compose run loconotion my_site.toml --verbose
+	$(DOCKER) compose run loconotion my_site.toml --verbose
 
 single:
-	docker-compose run loconotion my_site.toml --verbose --single-page
+	$(DOCKER) compose run loconotion my_site.toml --verbose --single-page
 
 
-upload: 
+upload:
 	ncftpput -u mail@dilawars.me -p $$DILAWARS_ME_FTP_PASSWORD \
 		-R ftp.dilawars.me \
 		/ ./dist/dilawars.me/*
 
-.PHONY: upload dilawars.me 
+.PHONY: upload dilawars.me
