@@ -54,7 +54,7 @@ page = "https://dilawars.notion.site"
   type="text/javascript"
   src="https://www.googletagmanager.com/gtag/js?id=G-6C5GKY3X0W"
 
-  [[site.inject.head.script]]
+  [[site.inject.body.script]]
   type="text/javascript"
   src="./gtags.js"
 
