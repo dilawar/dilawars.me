@@ -72,6 +72,6 @@ page = "https://dilawars.notion.site"
   type="text/javascript"
   src="./disqus.js"
 
-  [[site.inject.body.script]]
+  [[site.inject.head.script]]
   type="text/javascript"
   src="./gtags.js"
