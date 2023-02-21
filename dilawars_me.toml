@@ -52,16 +52,12 @@ page = "https://dilawars.notion.site"
   ## Custom Element Injection ##
   [[site.inject.head.script]]
   type="text/javascript"
-  src="/gtags.js"
-
-  [[site.inject.head.script]]
-  type="text/javascript"
   src="https://www.googletagmanager.com/gtag/js?id=G-6C5GKY3X0W"
-
-  [[site.inject.body.script]]
-  type="text/javascript"
-  src="/disqus.js"
 
   [[site.inject.head.script]]
   type="text/javascript"
   src="./gtags.js"
+
+  [[site.inject.body.script]]
+  type="text/javascript"
+  src="./disqus.js"
