@@ -4,10 +4,10 @@ all: dilawars.me
 
 dilawars.me build:
 	rm -rf dilawars.me
-	$(DOCKER) compose run loconotion my_site.toml --verbose
+	$(DOCKER) compose run loconotion dilawars_me.toml --verbose
 
 single:
-	$(DOCKER) compose run loconotion my_site.toml --verbose --single-page
+	$(DOCKER) compose run loconotion dilawars_me.toml --verbose --single-page
 
 
 upload:
