@@ -4,7 +4,7 @@ all: build upload
 
 dilawars.me build:
 	rm -rf dilawars.me
-	$(DOCKER) compose run loconotion dilawars_me.toml --clean-js --clean-css 
+	$(DOCKER) compose run loconotion dilawars_me.toml 
 
 
 upload:
