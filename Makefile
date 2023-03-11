@@ -1,12 +1,10 @@
-all: dilawars.me
+all : dilawars.me
 
-dilawars.me: 
-	rm -rf dilawars.me
-	docker-compose run loconotion my_site.toml
 
-upload: dilawars.me
+dilawars.me : 
+	docker-compose run loconotion https://dilawars.notion.site 
+
+upload:
 	ncftpput -u dilawar@dilawars.me -p $$FTP_PASSWORD \
 		-R ftp.dilawars.me \
-		/public_html ./dist/dilawars.me/*
-
-.PHONY: upload dilawars.me
+		/public_html ./dilawars.me 
