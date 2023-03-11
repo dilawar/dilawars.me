@@ -58,8 +58,8 @@ class toggle_block_has_opened(object):
         self.toggle_block = toggle_block
 
     def __call__(self, driver):
-        toggle_content = self.toggle_block.find_element_by_css_selector(
-            "div:not([style]"
+        toggle_content = self.toggle_block.find_element(
+            By.CSS_SELECTOR, "div:not([style]"
         )
         if toggle_content:
             content_children = len(toggle_content.find_elements(By.TAG_NAME, "div"))

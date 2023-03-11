@@ -351,12 +351,14 @@ class Parser:
         log.debug(f"Opening {len(toggle_blocks)} new toggle blocks in the page")
         for toggle_block in toggle_blocks:
             if toggle_block not in opened_toggles:
-                toggle_button = toggle_block.find_element_by_css_selector(
-                    "div[role=button]"
+                toggle_button = toggle_block.find_element(
+                    By.CSS_SELECTOR, "div[role=button]"
                 )
                 # check if the toggle is already open by the direction of its arrow
                 is_toggled = "(180deg)" in (
-                    toggle_button.find_element_by_tag_name("svg").get_attribute("style")
+                    toggle_button.find_element(By.TAG_NAME, "svg").get_attribute(
+                        "style"
+                    )
                 )
                 if not is_toggled:
                     # click on it, then wait until all elements are displayed
