@@ -15,12 +15,17 @@ log = logging.getLogger(f"loconotion.{__name__}")
 
 try:
     import chromedriver_autoinstaller
+    from selenium.webdriver.chrome.options import Options as ChromeOptions
+except Exception:
+    log.warning("chromedriver_autoinstaller is not found")
+
+try:
     import cssutils
     import requests
     from bs4 import BeautifulSoup
     from selenium import webdriver
+    from selenium.webdriver.firefox.options import Options as FirefoxOptions
     from selenium.common.exceptions import TimeoutException
-    from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.support.ui import WebDriverWait
 
     cssutils.log.setLevel(logging.CRITICAL)  # removes warning logs from cssutils
@@ -45,7 +50,9 @@ class Parser:
             raise Exception()
 
         # get the site name from the config, or make it up by cleaning the target page's slug
-        site_name = self.config.get("name", self.get_page_slug(index_url, extension=False))
+        site_name = self.config.get(
+            "name", self.get_page_slug(index_url, extension=False)
+        )
 
         self.index_url = index_url
 
@@ -80,7 +87,8 @@ class Parser:
         self.dist_folder.mkdir(parents=True, exist_ok=True)
 
         # initialize chromedriver
-        self.driver = self.init_chromedriver()
+        #  self.driver = self.init_chromedriver()
+        self.driver = self.init_firefoxdriver()
 
         self.starting_url = index_url
 
@@ -211,6 +219,18 @@ class Parser:
             log.debug(f"'{url}' was already downloaded")
             return cached_file
 
+    def init_firefoxdriver(self):
+        firefox_options = FirefoxOptions()
+        if not self.args.get("non_headless", False):
+            firefox_options.add_argument("--headless")
+            firefox_options.add_argument("window-size=1920,20000")
+            firefox_options.add_argument("--no-sandbox")
+            firefox_options.add_argument("--disable-dev-shm-usage")
+        firefox_options.add_argument("--log-level=3")
+        firefox_options.add_argument("--silent")
+        firefox_options.add_argument("--disable-logging")
+        return webdriver.Firefox(options=firefox_options)
+
     def init_chromedriver(self):
         chromedriver_path = self.args.get("chromedriver")
         if not chromedriver_path:
@@ -229,7 +249,7 @@ class Parser:
         logs_path = Path.cwd() / ".logs" / "webdrive.log"
         logs_path.parent.mkdir(parents=True, exist_ok=True)
 
-        chrome_options = Options()
+        chrome_options = ChromeOptions()
         if not self.args.get("non_headless", False):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument("window-size=1920,20000")
@@ -239,7 +259,7 @@ class Parser:
         chrome_options.add_argument("--silent")
         chrome_options.add_argument("--disable-logging")
         #  removes the 'DevTools listening' log message
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        chrome_options.add_option("excludeSwitches", ["enable-logging"])
         return webdriver.Chrome(
             executable_path=str(chromedriver_path),
             service_log_path=str(logs_path),
@@ -360,10 +380,9 @@ class Parser:
         if len(new_toggle_blocks) > len(toggle_blocks):
             # if so, run the function again
             self.open_toggle_blocks(timeout, opened_toggles)
-        
+
     def _get_title_toggle_blocks(self):
-        """Find toggle title blocks via their button element.
-        """
+        """Find toggle title blocks via their button element."""
         title_toggle_blocks = []
         header_types = ["header", "sub_header", "sub_sub_header"]
         for header_type in header_types:
@@ -375,12 +394,14 @@ class Parser:
                 if len(toggle_buttons) > 0:
                     title_toggle_blocks.append(block)
         return title_toggle_blocks
-    
+
     def clean_up(self, soup):
         # remove scripts and other tags we don't want / need
         for unwanted in soup.findAll("script"):
             unwanted.decompose()
-        for aif_production in soup.findAll("iframe", {"src": "https://aif.notion.so/aif-production.html"}):
+        for aif_production in soup.findAll(
+            "iframe", {"src": "https://aif.notion.so/aif-production.html"}
+        ):
             aif_production.decompose()
         for intercom_frame in soup.findAll("iframe", {"id": "intercom-frame"}):
             intercom_frame.decompose()
@@ -540,19 +561,17 @@ class Parser:
                 ] = toggle_id
 
     def _get_title_toggle_blocks_soup(self, soup):
-        """Find title toggle blocks from soup.
-        """
+        """Find title toggle blocks from soup."""
         title_toggle_blocks = []
         title_types = ["header", "sub_header", "sub_sub_header"]
         for title_type in title_types:
             title_blocks = soup.findAll(
-                "div",
-                {"class": f"notion-selectable notion-{title_type}-block"}
+                "div", {"class": f"notion-selectable notion-{title_type}-block"}
             )
             for block in title_blocks:
                 if block.select_one("div[role=button]") is not None:
                     title_toggle_blocks.append(block)
-        return title_toggle_blocks 
+        return title_toggle_blocks
 
     def process_table_views(self, soup):
         # if there are any table views in the page, add links to the title rows
@@ -638,7 +657,6 @@ class Parser:
             for element in elements:
                 injected_tag = soup.new_tag(tag)
                 for attr, value in element.items():
-
                     # `inner_html` refers to the tag's inner content
                     # and will be added later
                     if attr == "inner_html":
@@ -709,7 +727,9 @@ class Parser:
                     else:
                         extension_in_links = self.config.get("extension_in_links", True)
                         a["href"] = (
-                            self.get_page_slug(sub_page_href, extension=extension_in_links)
+                            self.get_page_slug(
+                                sub_page_href, extension=extension_in_links
+                            )
                             if sub_page_href != self.index_url
                             else ("index.html" if extension_in_links else "")
                         )
