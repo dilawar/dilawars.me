@@ -17,7 +17,7 @@ try:
     import chromedriver_autoinstaller
     from selenium.webdriver.chrome.options import Options as ChromeOptions
 except Exception:
-    log.warning("chromedriver_autoinstaller is not found")
+    log.warning("chromedriver_autoinstaller is not found. Falling back to Firefox.")
 
 try:
     import cssutils
@@ -27,6 +27,7 @@ try:
     from selenium.webdriver.firefox.options import Options as FirefoxOptions
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.common.by import By
 
     cssutils.log.setLevel(logging.CRITICAL)  # removes warning logs from cssutils
 except ModuleNotFoundError as error:
@@ -343,7 +344,7 @@ class Parser:
         Opening toggles is needed for hooking up our custom toggle logic afterwards.
         """
         opened_toggles = exclude
-        toggle_blocks = self.driver.find_elements_by_class_name("notion-toggle-block")
+        toggle_blocks = self.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
         toggle_blocks += self._get_title_toggle_blocks()
         log.debug(f"Opening {len(toggle_blocks)} new toggle blocks in the page")
         for toggle_block in toggle_blocks:
@@ -373,8 +374,8 @@ class Parser:
 
         # after all toggles have been opened, check the page again to see if
         # any toggle block had nested toggle blocks inside them
-        new_toggle_blocks = self.driver.find_elements_by_class_name(
-            "notion-toggle-block"
+        new_toggle_blocks = self.driver.find_elements(
+            By.CLASS_NAME, "notion-toggle-block"
         )
         new_toggle_blocks += self._get_title_toggle_blocks()
         if len(new_toggle_blocks) > len(toggle_blocks):
@@ -386,11 +387,11 @@ class Parser:
         title_toggle_blocks = []
         header_types = ["header", "sub_header", "sub_sub_header"]
         for header_type in header_types:
-            title_blocks = self.driver.find_elements_by_class_name(
-                f"notion-selectable.notion-{header_type}-block"
+            title_blocks = self.driver.find_elements(
+                By.CLASS_NAME, f"notion-selectable.notion-{header_type}-block"
             )
             for block in title_blocks:
-                toggle_buttons = block.find_elements_by_css_selector("div[role=button]")
+                toggle_buttons = block.find_elements(By.CLASS_NAME, "div[role=button]")
                 if len(toggle_buttons) > 0:
                     title_toggle_blocks.append(block)
         return title_toggle_blocks
