@@ -1,7 +1,7 @@
 import os
 import sys
 
-import modules.main as main
+from .modules import main as mod_main
 
 def _exit():
     try:
@@ -9,11 +9,11 @@ def _exit():
     except SystemExit:
         os._exit(1)
 
-if __name__ == "__main__":
+def main():
     try:
-        args = main.get_args()
-        log = main.setup_logging(args)
-        parser = main.init_parser(args, log)
+        args = mod_main.get_args()
+        log = mod_main.setup_logging(args)
+        parser = mod_main.init_parser(args, log)
         parser.run()
     except KeyboardInterrupt:
         log.critical("Interrupted by user")
@@ -24,3 +24,6 @@ if __name__ == "__main__":
         else:
             log.critical(f"{ex.__class__.__name__}: {str(ex)}")
         _exit()
+
+if __name__ == "__main__":
+    main()
