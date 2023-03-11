@@ -792,6 +792,10 @@ class Parser:
             int(elapsed_time % 3600 // 60),
             int(elapsed_time % 60),
         )
+        try:
+            self.driver.close()
+        except Exception as e:
+            log.warning("Failed to close the driver: {e}")
         log.info(
             f"Finished!\n\nProcessed {len(self.processed_pages)} pages in {formatted_time}"
         )
