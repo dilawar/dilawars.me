@@ -1,6 +1,6 @@
 DOCKER:=/usr/bin/docker
 
-all: dilawars.me
+all: build upload
 
 dilawars.me build:
 	rm -rf dilawars.me
