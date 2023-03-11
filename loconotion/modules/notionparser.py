@@ -9,6 +9,7 @@ import sys
 import time
 import urllib.parse
 import uuid
+import typing as T
 from pathlib import Path
 
 log = logging.getLogger(f"loconotion.{__name__}")
@@ -152,7 +153,7 @@ class Parser:
                 path = path.split("?")[0].lower()
             return path + (".html" if extension else "")
 
-    def cache_file(self, url, filename=None):
+    def cache_file(self, url: T.Union[Path, str], filename=None):
         # stringify the url in case it's a Path object
         url = str(url)
 
@@ -207,6 +208,7 @@ class Parser:
                 except Exception as error:
                     log.error(f"Error downloading file '{url}': {error}")
                     return url
+
             # if not, check if it's a local file, and copy it to the dist folder
             else:
                 if Path(url).is_file():
@@ -479,9 +481,7 @@ class Parser:
             if img.has_attr("class") and "notion-emoji" in img["class"]:
                 style = cssutils.parseStyle(img["style"])
                 spritesheet = style["background"]
-                spritesheet_url = spritesheet[
-                    spritesheet.find("(") + 1 : spritesheet.find(")")
-                ]
+                spritesheet_url = re.search(r"url\((\S+)\)", spritesheet).group(1)
                 cached_spritesheet_url = self.cache_file(
                     f"https://www.notion.so{spritesheet_url}"
                 )
@@ -498,6 +498,7 @@ class Parser:
                 # we don't need the vendors stylesheet
                 if "vendors~" in link["href"]:
                     continue
+                print(113, link["href"])
                 cached_css_file = self.cache_file(
                     f'https://www.notion.so{link["href"]}'
                 )
